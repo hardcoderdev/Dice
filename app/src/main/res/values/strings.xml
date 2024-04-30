@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Dice</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="roll_bottom_menu_option">Кости</string>
+    <string name="history_bottom_menu_option">История</string>
+    <string name="settings_bottom_menu_option">Настройки</string>
 </resources>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/rollOption"
+        android:icon="@drawable/ic_roll"
+        android:title="@string/roll_bottom_menu_option" />
+    <item
+        android:id="@+id/historyOption"
+        android:icon="@drawable/ic_history"
+        android:title="@string/history_bottom_menu_option" />
+    <item
+        android:id="@+id/settingsOption"
+        android:icon="@drawable/ic_settings"
+        android:title="@string/settings_bottom_menu_option" />
+</menu>
