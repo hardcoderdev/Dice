@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <PreferenceCategory app:title="Настройки звука">
+        <SwitchPreference
+            android:summaryOn="Звук включен"
+            app:defaultValue="true"
+            app:icon="@drawable/ic_sound_on"
+            app:key="sound_toggle"
+            app:summaryOff="Звук выключен"
+            app:title="Звук при броске кубика" />
+        <ListPreference
+            android:dialogTitle="Выбор мелодии"
+            android:entries="@array/sound_variants"
+            android:entryValues="@array/sound_variants"
+            app:defaultValue="@string/first_sound_key"
+            app:icon="@drawable/ic_music"
+            app:key="sound_type"
+            app:summary="Нажми для просмотра"
+            app:title="Выбор мелодии" />
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="Прочие настройки">
+        <SwitchPreference
+            android:summaryOn="Анимация включена"
+            app:defaultValue="true"
+            app:icon="@drawable/ic_animation"
+            app:key="animation_toggle"
+            app:summaryOff="Анимация выключена"
+            app:title="Анимация при броске кубика" />
+        <ListPreference
+            android:dialogTitle="Выбор темы"
+            android:entries="@array/theme_variants"
+            android:entryValues="@array/theme_variants"
+            app:defaultValue="@string/system_theme_key"
+            app:icon="@drawable/ic_theme"
+            app:key="theme_type"
+            app:summary="Нажми для просмотра"
+            app:title="Выбор темы" />
+    </PreferenceCategory>
+
+
+</androidx.preference.PreferenceScreen>

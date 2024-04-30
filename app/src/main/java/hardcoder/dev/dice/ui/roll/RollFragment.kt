@@ -47,8 +47,19 @@ class RollFragment : Fragment(R.layout.fragment_roll) {
 
     private fun rollDice() {
         val randomNumber = Random.nextInt(0..5)
-        playSound()
-        playDiceAnimation(randomNumber)
+
+        if (sharedPreferences.getBoolean("sound_toggle", true)) playSound()
+        if (sharedPreferences.getBoolean("animation_toggle", true)) {
+            playDiceAnimation {
+                with(diceImageView) {
+                    setImageResource(diceEdgesSet.elementAt(randomNumber))
+                    isEnabled = true
+                }
+            }
+        } else {
+            diceImageView.setImageResource(diceEdgesSet.elementAt(randomNumber))
+        }
+
         sharedPreferences.edit { putInt("lastNumber", randomNumber) }
 
         if (diceRollItemsList.isEmpty()) {
@@ -75,12 +86,21 @@ class RollFragment : Fragment(R.layout.fragment_roll) {
     }
 
     private fun playSound() {
-        val soundToPlay = setOf(R.raw.dice_sound_1, R.raw.dice_sound_2)
-        val player = MediaPlayer.create(requireContext(), soundToPlay.random())
+        val soundToPlay = when (sharedPreferences.getString("sound_type", "Первый звук")) {
+            requireContext().getString(R.string.first_sound_key) -> R.raw.dice_sound_1
+            requireContext().getString(R.string.second_sound_key) -> R.raw.dice_sound_2
+            requireContext().getString(R.string.random_sound_key) -> setOf(
+                R.raw.dice_sound_1,
+                R.raw.dice_sound_2
+            ).random()
+
+            else -> error("No sound associated with this value. Please, update your entries!")
+        }
+        val player = MediaPlayer.create(requireContext(), soundToPlay)
         player.start()
     }
 
-    private fun playDiceAnimation(randomNumber: Int) {
+    private fun playDiceAnimation(onAnimationEnd: () -> Unit) {
         diceImageView
             .animate()
             .rotationBy(360f)
@@ -90,10 +110,7 @@ class RollFragment : Fragment(R.layout.fragment_roll) {
                 diceImageView.isEnabled = false
             }
             .withEndAction {
-                diceImageView.apply {
-                    setImageResource(diceEdgesSet.elementAt(randomNumber))
-                    isEnabled = true
-                }
+                onAnimationEnd()
             }
     }
 }
