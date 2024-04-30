@@ -1,7 +1,9 @@
 package hardcoder.dev.dice.ui.roll
 
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.View
+import android.view.animation.BounceInterpolator
 import android.widget.ImageView
 import androidx.core.content.edit
 import androidx.fragment.app.Fragment
@@ -39,31 +41,59 @@ class RollFragment : Fragment(R.layout.fragment_roll) {
         if (lastNumber != -1) diceImageView.setImageResource(diceEdgesSet.elementAt(lastNumber))
 
         diceImageView.setOnClickListener {
-            val randomNumber = Random.nextInt(0..5)
-            diceImageView.setImageResource(diceEdgesSet.elementAt(randomNumber))
-            sharedPreferences.edit { putInt("lastNumber", randomNumber) }
+            rollDice()
+        }
+    }
 
-            if (diceRollItemsList.isEmpty()) {
-                val diceHistoryListJson = sharedPreferences.getString("diceHistoryListJson", "")
-                diceRollItemsList = if (diceHistoryListJson.isNullOrBlank()) {
-                    mutableListOf()
-                } else {
-                    Gson().fromJson(
-                        diceHistoryListJson,
-                        Array<DiceRollItem>::class.java
-                    ).toMutableList()
+    private fun rollDice() {
+        val randomNumber = Random.nextInt(0..5)
+        playSound()
+        playDiceAnimation(randomNumber)
+        sharedPreferences.edit { putInt("lastNumber", randomNumber) }
+
+        if (diceRollItemsList.isEmpty()) {
+            val diceHistoryListJson = sharedPreferences.getString("diceHistoryListJson", "")
+            diceRollItemsList = if (diceHistoryListJson.isNullOrBlank()) {
+                mutableListOf()
+            } else {
+                Gson().fromJson(
+                    diceHistoryListJson,
+                    Array<DiceRollItem>::class.java
+                ).toMutableList()
+            }
+        }
+
+        diceRollItemsList.add(
+            DiceRollItem(
+                diceNumber = randomNumber.inc(),
+                dateTime = System.currentTimeMillis()
+            )
+        )
+
+        val diceHistoryListJson = Gson().toJson(diceRollItemsList)
+        sharedPreferences.edit { putString("diceHistoryListJson", diceHistoryListJson) }
+    }
+
+    private fun playSound() {
+        val soundToPlay = setOf(R.raw.dice_sound_1, R.raw.dice_sound_2)
+        val player = MediaPlayer.create(requireContext(), soundToPlay.random())
+        player.start()
+    }
+
+    private fun playDiceAnimation(randomNumber: Int) {
+        diceImageView
+            .animate()
+            .rotationBy(360f)
+            .setDuration(1000)
+            .setInterpolator(BounceInterpolator())
+            .withStartAction {
+                diceImageView.isEnabled = false
+            }
+            .withEndAction {
+                diceImageView.apply {
+                    setImageResource(diceEdgesSet.elementAt(randomNumber))
+                    isEnabled = true
                 }
             }
-
-            diceRollItemsList.add(
-                DiceRollItem(
-                    diceNumber = randomNumber.inc(),
-                    dateTime = System.currentTimeMillis()
-                )
-            )
-
-            val diceHistoryListJson = Gson().toJson(diceRollItemsList)
-            sharedPreferences.edit { putString("diceHistoryListJson", diceHistoryListJson) }
-        }
     }
 }
