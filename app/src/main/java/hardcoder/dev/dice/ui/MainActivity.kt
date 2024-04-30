@@ -2,7 +2,7 @@ package hardcoder.dev.dice.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.navigation.NavigationBarView
 import hardcoder.dev.dice.R
 import hardcoder.dev.dice.ui.history.HistoryFragment
 import hardcoder.dev.dice.ui.roll.RollFragment
@@ -10,7 +10,7 @@ import hardcoder.dev.dice.ui.settings.SettingsFragment
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var bottomNavigationView: BottomNavigationView
+    private lateinit var bottomNavigationView: NavigationBarView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
