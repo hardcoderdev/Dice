@@ -6,7 +6,9 @@ import android.widget.ImageView
 import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceManager
+import com.google.gson.Gson
 import hardcoder.dev.dice.R
+import hardcoder.dev.dice.ui.history.DiceRollItem
 import kotlin.random.Random
 import kotlin.random.nextInt
 
@@ -26,6 +28,7 @@ class RollFragment : Fragment(R.layout.fragment_roll) {
         R.drawable.dice5,
         R.drawable.dice6
     )
+    private var diceRollItemsList = mutableListOf<DiceRollItem>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -39,6 +42,28 @@ class RollFragment : Fragment(R.layout.fragment_roll) {
             val randomNumber = Random.nextInt(0..5)
             diceImageView.setImageResource(diceEdgesSet.elementAt(randomNumber))
             sharedPreferences.edit { putInt("lastNumber", randomNumber) }
+
+            if (diceRollItemsList.isEmpty()) {
+                val diceHistoryListJson = sharedPreferences.getString("diceHistoryListJson", "")
+                diceRollItemsList = if (diceHistoryListJson.isNullOrBlank()) {
+                    mutableListOf()
+                } else {
+                    Gson().fromJson(
+                        diceHistoryListJson,
+                        Array<DiceRollItem>::class.java
+                    ).toMutableList()
+                }
+            }
+
+            diceRollItemsList.add(
+                DiceRollItem(
+                    diceNumber = randomNumber.inc(),
+                    dateTime = System.currentTimeMillis()
+                )
+            )
+
+            val diceHistoryListJson = Gson().toJson(diceRollItemsList)
+            sharedPreferences.edit { putString("diceHistoryListJson", diceHistoryListJson) }
         }
     }
 }

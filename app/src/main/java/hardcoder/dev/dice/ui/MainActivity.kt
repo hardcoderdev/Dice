@@ -17,6 +17,13 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         bottomNavigationView = findViewById(R.id.bottomNavigationView)
 
+        supportFragmentManager.setFragmentResultListener(
+            "onLinkClicked",
+            this
+        ) { _, _ ->
+            onLinkClicked()
+        }
+
         bottomNavigationView.setOnItemSelectedListener { menuItem ->
             val fragment = when (menuItem.itemId) {
                 R.id.rollOption -> RollFragment()
@@ -32,5 +39,13 @@ class MainActivity : AppCompatActivity() {
 
             return@setOnItemSelectedListener true
         }
+    }
+
+    private fun onLinkClicked() {
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.mainFragmentContainerView, RollFragment::class.java, null)
+            .commit()
+        bottomNavigationView.selectedItemId = R.id.rollOption
     }
 }

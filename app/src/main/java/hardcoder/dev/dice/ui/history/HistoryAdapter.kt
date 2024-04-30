@@ -57,4 +57,9 @@ class HistoryAdapter : RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder>() 
     fun addItems(list: List<DiceRollItem>) {
         diceRollItemsList = list
     }
+
+    fun clearItems() {
+        notifyItemRangeRemoved(0, diceRollItemsList.size)
+        diceRollItemsList = emptyList()
+    }
 }
